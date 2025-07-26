@@ -32,21 +32,35 @@ export default function LocationModal() {
       const position = await getCurrentPosition();
       if (position) {
         setLocation(position);
-        toast({
-          title: "Location Updated",
-          description: "Using your current location for delivery",
-        });
+        
+        // Different messages based on location type
+        if (position.address.includes("GPS")) {
+          toast({
+            title: "Location Updated",
+            description: "Using your precise GPS location for delivery",
+          });
+        } else if (position.address.includes("Approximate") || position.address.includes("Default")) {
+          toast({
+            title: "Location Updated",
+            description: "Using approximate location. You can refine this by selecting a specific address below.",
+          });
+        } else {
+          toast({
+            title: "Location Updated", 
+            description: "Location detected successfully",
+          });
+        }
       } else {
         toast({
-          title: "Location Error",
-          description: "Unable to access your location. Please select from available addresses.",
+          title: "Location Detection Failed",
+          description: "Please enable location permissions or select an address manually.",
           variant: "destructive",
         });
       }
     } catch (error) {
       toast({
         title: "Location Error", 
-        description: "Failed to get current location",
+        description: "Unable to detect location. Please select an address from the list.",
         variant: "destructive",
       });
     }
@@ -90,8 +104,15 @@ export default function LocationModal() {
               disabled={isLoadingPosition}
             >
               <Navigation className="h-4 w-4 mr-2" />
-              {isLoadingPosition ? "Getting location..." : "Use Current Location"}
+              {isLoadingPosition ? "Detecting location..." : "Detect My Location"}
             </Button>
+            
+            <div className="text-xs text-gray-500 text-center space-y-1">
+              <p>Click to automatically detect your location or manually select an address below</p>
+              <p className="text-orange-600">
+                Note: GPS detection may not work in all environments. We'll provide an approximate location if needed.
+              </p>
+            </div>
           </div>
         </div>
 

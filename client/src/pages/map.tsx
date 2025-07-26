@@ -1,5 +1,6 @@
 import Header from "@/components/header";
 import MapView from "@/components/map-view";
+import LocationInfo from "@/components/location-info";
 import { Button } from "@/components/ui/button";
 import { Navigation, Search, MapPin } from "lucide-react";
 import { useLocation } from "@/hooks/use-location";
@@ -17,6 +18,10 @@ export default function Map() {
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">Store Locations</h1>
           <p className="text-gray-600">Find stores near you and check delivery areas</p>
+          
+          <div className="mt-4">
+            <LocationInfo />
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-3 mb-6">
