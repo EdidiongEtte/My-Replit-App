@@ -27,6 +27,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const { data: cartItems = [] } = useQuery<CartItemWithProduct[]>({
     queryKey: ["/api/cart", sessionId],
+    queryFn: () => fetch(`/api/cart?sessionId=${sessionId}`).then(res => res.json()),
     refetchOnWindowFocus: true,
   });
 
@@ -34,7 +35,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     mutationFn: (data: { productId: string; quantity: number; sessionId: string }) =>
       apiRequest("POST", `/api/cart?sessionId=${sessionId}`, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/cart"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/cart", sessionId] });
     },
   });
 
@@ -42,21 +43,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
     mutationFn: ({ id, quantity }: { id: string; quantity: number }) =>
       apiRequest("PATCH", `/api/cart/${id}`, { quantity }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/cart"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/cart", sessionId] });
     },
   });
 
   const removeFromCartMutation = useMutation({
     mutationFn: (id: string) => apiRequest("DELETE", `/api/cart/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/cart"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/cart", sessionId] });
     },
   });
 
   const clearCartMutation = useMutation({
     mutationFn: () => apiRequest("DELETE", `/api/cart?sessionId=${sessionId}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/cart"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/cart", sessionId] });
     },
   });
 
