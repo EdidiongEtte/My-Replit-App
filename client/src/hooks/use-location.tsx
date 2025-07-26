@@ -20,46 +20,62 @@ interface LocationContextType {
 }
 
 const defaultLocation: Location = {
-  address: "123 Main St",
-  latitude: 40.7128,
-  longitude: -74.0060,
-  city: "New York",
-  state: "NY",
-  zipCode: "10001"
+  address: "Current Location",
+  latitude: 51.5074,
+  longitude: -0.1278,
+  city: "London",
+  state: "England",
+  zipCode: "SW1A 1AA"
 };
 
 const availableLocations: Location[] = [
   {
-    address: "123 Main St",
-    latitude: 40.7128,
-    longitude: -74.0060,
-    city: "New York",
-    state: "NY",
-    zipCode: "10001"
+    address: "10 Downing Street",
+    latitude: 51.5034,
+    longitude: -0.1276,
+    city: "London",
+    state: "England",
+    zipCode: "SW1A 2AA"
   },
   {
-    address: "456 Oak Avenue",
-    latitude: 40.7282,
-    longitude: -73.9942,
-    city: "New York",
-    state: "NY", 
-    zipCode: "10002"
+    address: "221B Baker Street",
+    latitude: 51.5238,
+    longitude: -0.1586,
+    city: "London",
+    state: "England", 
+    zipCode: "NW1 6XE"
   },
   {
-    address: "789 Elm Street",
-    latitude: 40.7505,
-    longitude: -73.9934,
-    city: "New York",
-    state: "NY",
-    zipCode: "10003"
+    address: "1 Tower Bridge Road",
+    latitude: 51.5055,
+    longitude: -0.0754,
+    city: "London",
+    state: "England",
+    zipCode: "SE1 2UP"
   },
   {
-    address: "321 Pine Road",
-    latitude: 40.7589,
-    longitude: -73.9851,
-    city: "New York", 
-    state: "NY",
-    zipCode: "10021"
+    address: "30 St Mary Axe",
+    latitude: 51.5144,
+    longitude: -0.0803,
+    city: "London", 
+    state: "England",
+    zipCode: "EC3A 8EP"
+  },
+  {
+    address: "High Street",
+    latitude: 51.7520,
+    longitude: -1.2577,
+    city: "Oxford",
+    state: "England",
+    zipCode: "OX1 4BE"
+  },
+  {
+    address: "King's Parade", 
+    latitude: 52.2043,
+    longitude: 0.1218,
+    city: "Cambridge",
+    state: "England",
+    zipCode: "CB2 1ST"
   }
 ];
 
@@ -112,18 +128,24 @@ export function LocationProvider({ children }: { children: ReactNode }) {
         });
       }
 
-      const timeoutId = setTimeout(() => {
-        console.warn('Geolocation timeout - using approximate location');
-        // Return a simulated NYC location as fallback
-        const fallbackLocation: Location = {
-          address: "Detected Location (Approximate)",
-          latitude: 40.7128 + (Math.random() - 0.5) * 0.01,
-          longitude: -74.0060 + (Math.random() - 0.5) * 0.01,
-          city: "New York",
-          state: "NY",
-          zipCode: "10001"
-        };
-        resolve(fallbackLocation);
+      const timeoutId = setTimeout(async () => {
+        console.warn('Geolocation timeout - detecting approximate location via IP');
+        // Try to get location via IP geolocation
+        try {
+          const ipLocation = await getLocationFromIP();
+          resolve(ipLocation);
+        } catch (error) {
+          // Final fallback to UK location
+          const fallbackLocation: Location = {
+            address: "Detected Location (Approximate)",
+            latitude: 51.5074 + (Math.random() - 0.5) * 0.01,
+            longitude: -0.1278 + (Math.random() - 0.5) * 0.01,
+            city: "London",
+            state: "England",
+            zipCode: "SW1A 1AA"
+          };
+          resolve(fallbackLocation);
+        }
       }, 5000);
 
       navigator.geolocation.getCurrentPosition(
@@ -144,20 +166,26 @@ export function LocationProvider({ children }: { children: ReactNode }) {
           
           resolve(simulatedLocation);
         },
-        (error) => {
+        async (error) => {
           clearTimeout(timeoutId);
-          console.warn('Geolocation error, using fallback:', error.message || 'Unknown error');
+          console.warn('Geolocation error, using IP-based fallback:', error.message || 'Unknown error');
           
-          // Provide a helpful fallback location
-          const fallbackLocation: Location = {
-            address: "Default Location (GPS Unavailable)",
-            latitude: 40.7128 + (Math.random() - 0.5) * 0.01,
-            longitude: -74.0060 + (Math.random() - 0.5) * 0.01,
-            city: "New York",
-            state: "NY",
-            zipCode: "10001"
-          };
-          resolve(fallbackLocation);
+          // Try IP-based geolocation as fallback
+          try {
+            const ipLocation = await getLocationFromIP();
+            resolve(ipLocation);
+          } catch (ipError) {
+            // Final fallback location
+            const fallbackLocation: Location = {
+              address: "Default Location (GPS Unavailable)",
+              latitude: 51.5074 + (Math.random() - 0.5) * 0.01,
+              longitude: -0.1278 + (Math.random() - 0.5) * 0.01,
+              city: "London",
+              state: "England",
+              zipCode: "SW1A 1AA"
+            };
+            resolve(fallbackLocation);
+          }
         },
         {
           enableHighAccuracy: false, // Use less accuracy for better compatibility
@@ -189,4 +217,27 @@ export function useLocation() {
     throw new Error("useLocation must be used within a LocationProvider");
   }
   return context;
+}
+
+// IP-based geolocation fallback
+async function getLocationFromIP(): Promise<Location> {
+  try {
+    // Using a free IP geolocation service
+    const response = await fetch('https://ipapi.co/json/');
+    if (!response.ok) throw new Error('IP geolocation service unavailable');
+    
+    const data = await response.json();
+    
+    return {
+      address: `Detected Location (${data.city || 'Unknown City'})`,
+      latitude: data.latitude || 51.5074,
+      longitude: data.longitude || -0.1278,
+      city: data.city || 'London',
+      state: data.region || 'England', 
+      zipCode: data.postal || 'Unknown'
+    };
+  } catch (error) {
+    console.warn('IP geolocation failed:', error);
+    throw error;
+  }
 }
