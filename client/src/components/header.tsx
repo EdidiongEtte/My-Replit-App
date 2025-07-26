@@ -18,6 +18,7 @@ export default function Header() {
             </div>
           </div>
           <div className="flex items-center space-x-4">
+            <div className="text-primary font-bold text-lg">Paiko</div>
             <Button variant="ghost" size="sm" className="relative">
               <Bell className="text-gray-600 h-5 w-5" />
               <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">

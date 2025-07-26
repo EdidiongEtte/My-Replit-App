@@ -49,6 +49,7 @@ Preferred communication style: Simple, everyday language.
 - **Home**: Store directory, popular products, recent orders, and category browsing
 - **Store**: Individual store pages with product listings
 - **Search**: Universal search across stores and products
+- **Compare**: Price comparison across stores for similar products
 - **Orders**: Order history and status tracking
 - **Profile**: User account management (UI only)
 
@@ -57,6 +58,8 @@ Preferred communication style: Simple, everyday language.
 - **Product Cards**: Product listings with add-to-cart functionality
 - **Cart Modal**: Sliding cart interface with quantity management and checkout
 - **Bottom Navigation**: Mobile-optimized navigation between main sections
+- **Price Comparison**: Side-by-side product comparison with best price highlighting
+- **Header**: Top navigation with Paiko branding, location, and cart access
 
 ## Data Flow
 

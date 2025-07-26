@@ -1,4 +1,4 @@
-import { Home, Search, Receipt, User } from "lucide-react";
+import { Home, Search, Receipt, User, BarChart3 } from "lucide-react";
 import { useLocation } from "wouter";
 import { Link } from "wouter";
 
@@ -8,6 +8,7 @@ export default function BottomNavigation() {
   const navItems = [
     { icon: Home, label: "Home", path: "/" },
     { icon: Search, label: "Search", path: "/search" },
+    { icon: BarChart3, label: "Compare", path: "/compare" },
     { icon: Receipt, label: "Orders", path: "/orders" },
     { icon: User, label: "Profile", path: "/profile" },
   ];

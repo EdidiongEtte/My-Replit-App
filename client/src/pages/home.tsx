@@ -212,6 +212,21 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Compare Prices CTA */}
+        <section className="px-6 py-4">
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 text-white relative overflow-hidden">
+            <div className="relative z-10">
+              <h3 className="text-lg font-bold mb-2">Compare Prices</h3>
+              <p className="text-sm mb-4 opacity-90">Find the best deals on products across different stores.</p>
+              <Link href="/compare">
+                <Button className="bg-white text-blue-600 font-medium px-4 py-2 rounded-lg text-sm hover:bg-gray-100">
+                  Compare Now
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Delivery Promo */}
         <section className="px-6 py-4">
           <div className="bg-gradient-to-r from-primary to-green-600 rounded-lg p-6 text-white relative overflow-hidden">

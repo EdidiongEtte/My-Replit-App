@@ -82,6 +82,7 @@ export class MemStorage implements IStorage {
 
     // Seed products
     const productData = [
+      // FreshMart Grocery products
       {
         id: "product-1",
         storeId: "store-1",
@@ -120,6 +121,87 @@ export class MemStorage implements IStorage {
         image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
         price: "5.99",
         category: "dairy",
+        inStock: true
+      },
+      {
+        id: "product-5",
+        storeId: "store-1",
+        name: "Fresh Apples",
+        description: "1 lb bag",
+        image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "3.49",
+        category: "produce",
+        inStock: true
+      },
+      // QuickStop Market products (similar items with different prices)
+      {
+        id: "product-6",
+        storeId: "store-2",
+        name: "Bananas",
+        description: "1 bunch (6-8 pieces)",
+        image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "3.29",
+        category: "produce",
+        inStock: true
+      },
+      {
+        id: "product-7",
+        storeId: "store-2",
+        name: "Milk",
+        description: "1 gallon",
+        image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "4.79",
+        category: "dairy",
+        inStock: true
+      },
+      {
+        id: "product-8",
+        storeId: "store-2",
+        name: "White Bread",
+        description: "1 loaf",
+        image: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "2.99",
+        category: "bakery",
+        inStock: true
+      },
+      {
+        id: "product-9",
+        storeId: "store-2",
+        name: "Large Eggs",
+        description: "12 count",
+        image: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "5.49",
+        category: "dairy",
+        inStock: true
+      },
+      {
+        id: "product-10",
+        storeId: "store-2",
+        name: "Red Apples",
+        description: "1 lb bag",
+        image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "3.99",
+        category: "produce",
+        inStock: true
+      },
+      {
+        id: "product-11",
+        storeId: "store-2",
+        name: "Instant Coffee",
+        description: "8 oz jar",
+        image: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "6.99",
+        category: "pantry",
+        inStock: true
+      },
+      {
+        id: "product-12",
+        storeId: "store-2",
+        name: "Potato Chips",
+        description: "Family size bag",
+        image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "4.29",
+        category: "snacks",
         inStock: true
       }
     ];

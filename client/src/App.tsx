@@ -9,6 +9,7 @@ import Store from "@/pages/store";
 import Orders from "@/pages/orders";
 import Search from "@/pages/search";
 import Profile from "@/pages/profile";
+import Compare from "@/pages/compare";
 import BottomNavigation from "@/components/bottom-navigation";
 import CartModal from "@/components/cart-modal";
 import { CartProvider } from "@/hooks/use-cart";
@@ -21,6 +22,7 @@ function Router() {
         <Route path="/store/:id" component={Store} />
         <Route path="/orders" component={Orders} />
         <Route path="/search" component={Search} />
+        <Route path="/compare" component={Compare} />
         <Route path="/profile" component={Profile} />
         <Route component={NotFound} />
       </Switch>
