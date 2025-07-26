@@ -71,7 +71,14 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    storeData.forEach(store => this.stores.set(store.id, store as Store));
+    storeData.forEach(store => {
+      const storeRecord: Store = {
+        ...store,
+        freeDeliveryMinimum: store.freeDeliveryMinimum || null,
+        isOpen: store.isOpen ?? true
+      };
+      this.stores.set(store.id, storeRecord);
+    });
 
     // Seed products
     const productData = [
@@ -117,7 +124,13 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    productData.forEach(product => this.products.set(product.id, product as Product));
+    productData.forEach(product => {
+      const productRecord: Product = {
+        ...product,
+        inStock: product.inStock ?? true
+      };
+      this.products.set(product.id, productRecord);
+    });
 
     // Seed sample orders
     const orderData = [
@@ -166,7 +179,12 @@ export class MemStorage implements IStorage {
 
   async createStore(insertStore: InsertStore): Promise<Store> {
     const id = randomUUID();
-    const store: Store = { ...insertStore, id };
+    const store: Store = { 
+      ...insertStore, 
+      id,
+      freeDeliveryMinimum: insertStore.freeDeliveryMinimum || null,
+      isOpen: insertStore.isOpen ?? true
+    };
     this.stores.set(id, store);
     return store;
   }
@@ -195,7 +213,11 @@ export class MemStorage implements IStorage {
 
   async createProduct(insertProduct: InsertProduct): Promise<Product> {
     const id = randomUUID();
-    const product: Product = { ...insertProduct, id };
+    const product: Product = { 
+      ...insertProduct, 
+      id,
+      inStock: insertProduct.inStock ?? true
+    };
     this.products.set(id, product);
     return product;
   }
@@ -245,13 +267,17 @@ export class MemStorage implements IStorage {
 
     if (existingItem) {
       // Update quantity
-      const updatedItem = { ...existingItem, quantity: existingItem.quantity + insertCartItem.quantity };
+      const updatedItem = { ...existingItem, quantity: existingItem.quantity + (insertCartItem.quantity || 1) };
       this.cartItems.set(existingItem.id, updatedItem);
       return updatedItem;
     } else {
       // Create new cart item
       const id = randomUUID();
-      const cartItem: CartItem = { ...insertCartItem, id };
+      const cartItem: CartItem = { 
+        ...insertCartItem, 
+        id,
+        quantity: insertCartItem.quantity || 1
+      };
       this.cartItems.set(id, cartItem);
       return cartItem;
     }

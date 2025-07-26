@@ -95,8 +95,8 @@ export default function Profile() {
 
         {/* App Info */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500">FreshCart v1.0.0</p>
-          <p className="text-xs text-gray-400 mt-1">© 2024 FreshCart. All rights reserved.</p>
+          <p className="text-sm text-gray-500">Paiko v1.0.0</p>
+          <p className="text-xs text-gray-400 mt-1">© 2024 Paiko. All rights reserved.</p>
         </div>
       </div>
     </div>

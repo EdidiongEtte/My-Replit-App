@@ -143,9 +143,7 @@ export default function Search() {
                 <div className="space-y-4">
                   {filteredStores.map((store) => (
                     <Link key={store.id} href={`/store/${store.id}`}>
-                      <a>
-                        <StoreCard store={store} />
-                      </a>
+                      <StoreCard store={store} />
                     </Link>
                   ))}
                 </div>

@@ -105,9 +105,7 @@ export default function Home() {
             ) : (
               stores?.map((store) => (
                 <Link key={store.id} href={`/store/${store.id}`}>
-                  <a>
-                    <StoreCard store={store} />
-                  </a>
+                  <StoreCard store={store} />
                 </Link>
               ))
             )}

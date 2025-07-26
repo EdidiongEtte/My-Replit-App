@@ -1,8 +1,8 @@
-# Food Delivery Mobile App
+# Paiko - Grocery Delivery Platform
 
 ## Overview
 
-This is a full-stack food delivery mobile application built with React, Express.js, and PostgreSQL. The app features a modern mobile-first UI with shadcn/ui components, session-based cart management, real-time order tracking, and comprehensive store/product management. The application follows a monorepo structure with shared TypeScript schemas and uses Drizzle ORM for database operations.
+Paiko is a full-stack grocery delivery platform built with React, Express.js, and PostgreSQL. The app features a modern mobile-first UI with shadcn/ui components, session-based cart management, real-time order tracking, and comprehensive store/product management. The application follows a monorepo structure with shared TypeScript schemas and uses Drizzle ORM for database operations.
 
 ## User Preferences
 
