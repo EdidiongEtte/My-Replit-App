@@ -20,16 +20,18 @@ Preferred communication style: Simple, everyday language.
 
 ### Backend Architecture
 - **Framework**: Express.js with TypeScript
-- **Database ORM**: Drizzle ORM with PostgreSQL dialect
+- **Database**: PostgreSQL with Drizzle ORM and full relational schema
+- **Storage**: DatabaseStorage class implementing IStorage interface with persistent data
 - **API Design**: RESTful endpoints for stores, products, orders, and cart management
 - **Session Management**: Session-based cart storage without user authentication
 - **Development Setup**: Hot reload with Vite integration in development mode
 
 ### Database Design
-- **Primary Database**: PostgreSQL (configured via Drizzle)
-- **Backup Storage**: In-memory storage implementation for development/testing
+- **Primary Database**: PostgreSQL with full production database setup (December 2024)
+- **ORM**: Drizzle ORM with type-safe database operations and relations
 - **Schema Management**: Shared TypeScript schemas with Zod validation
 - **Tables**: stores, products, orders, cart_items with proper foreign key relationships
+- **Data**: Seeded with 2 stores (FreshMart Grocery, QuickStop Market) and 12 products for comparison features
 
 ## Key Components
 

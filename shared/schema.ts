@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql, relations } from "drizzle-orm";
 import { pgTable, text, varchar, decimal, integer, boolean, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -71,3 +71,31 @@ export type InsertStore = z.infer<typeof insertStoreSchema>;
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type InsertCartItem = z.infer<typeof insertCartItemSchema>;
+
+// Relations
+export const storesRelations = relations(stores, ({ many }) => ({
+  products: many(products),
+  orders: many(orders),
+}));
+
+export const productsRelations = relations(products, ({ one, many }) => ({
+  store: one(stores, {
+    fields: [products.storeId],
+    references: [stores.id],
+  }),
+  cartItems: many(cartItems),
+}));
+
+export const ordersRelations = relations(orders, ({ one }) => ({
+  store: one(stores, {
+    fields: [orders.storeId],
+    references: [stores.id],
+  }),
+}));
+
+export const cartItemsRelations = relations(cartItems, ({ one }) => ({
+  product: one(products, {
+    fields: [cartItems.productId],
+    references: [products.id],
+  }),
+}));

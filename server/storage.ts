@@ -1,4 +1,7 @@
 import { type Store, type Product, type Order, type CartItem, type InsertStore, type InsertProduct, type InsertOrder, type InsertCartItem } from "@shared/schema";
+import { stores, products, orders, cartItems } from "@shared/schema";
+import { db } from "./db";
+import { eq, and } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -390,4 +393,148 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Database Storage Implementation
+export class DatabaseStorage implements IStorage {
+  async getStores(): Promise<Store[]> {
+    return await db.select().from(stores);
+  }
+
+  async getStore(id: string): Promise<Store | undefined> {
+    const [store] = await db.select().from(stores).where(eq(stores.id, id));
+    return store || undefined;
+  }
+
+  async createStore(insertStore: InsertStore): Promise<Store> {
+    const [store] = await db
+      .insert(stores)
+      .values(insertStore)
+      .returning();
+    return store;
+  }
+
+  async getProducts(): Promise<Product[]> {
+    return await db.select().from(products);
+  }
+
+  async getProductsByStore(storeId: string): Promise<Product[]> {
+    return await db.select().from(products).where(eq(products.storeId, storeId));
+  }
+
+  async getProduct(id: string): Promise<Product | undefined> {
+    const [product] = await db.select().from(products).where(eq(products.id, id));
+    return product || undefined;
+  }
+
+  async searchProducts(query: string): Promise<Product[]> {
+    const allProducts = await db.select().from(products);
+    const lowercaseQuery = query.toLowerCase();
+    return allProducts.filter(product => 
+      product.name.toLowerCase().includes(lowercaseQuery) || 
+      product.description.toLowerCase().includes(lowercaseQuery) ||
+      product.category.toLowerCase().includes(lowercaseQuery)
+    );
+  }
+
+  async createProduct(insertProduct: InsertProduct): Promise<Product> {
+    const [product] = await db
+      .insert(products)
+      .values(insertProduct)
+      .returning();
+    return product;
+  }
+
+  async getOrders(): Promise<Order[]> {
+    const orderList = await db.select().from(orders);
+    return orderList.sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async getOrder(id: string): Promise<Order | undefined> {
+    const [order] = await db.select().from(orders).where(eq(orders.id, id));
+    return order || undefined;
+  }
+
+  async createOrder(insertOrder: InsertOrder): Promise<Order> {
+    const [order] = await db
+      .insert(orders)
+      .values(insertOrder)
+      .returning();
+    return order;
+  }
+
+  async updateOrderStatus(id: string, status: string): Promise<Order | undefined> {
+    const [order] = await db
+      .update(orders)
+      .set({ status })
+      .where(eq(orders.id, id))
+      .returning();
+    return order || undefined;
+  }
+
+  async getCartItems(sessionId: string): Promise<CartItem[]> {
+    return await db.select().from(cartItems).where(eq(cartItems.sessionId, sessionId));
+  }
+
+  async addToCart(insertCartItem: InsertCartItem): Promise<CartItem> {
+    // Check if item already exists in cart
+    const existingItems = await db
+      .select()
+      .from(cartItems)
+      .where(and(
+        eq(cartItems.productId, insertCartItem.productId),
+        eq(cartItems.sessionId, insertCartItem.sessionId)
+      ));
+
+    if (existingItems.length > 0) {
+      // Update quantity
+      const existingItem = existingItems[0];
+      const [updatedItem] = await db
+        .update(cartItems)
+        .set({ quantity: existingItem.quantity + (insertCartItem.quantity || 1) })
+        .where(eq(cartItems.id, existingItem.id))
+        .returning();
+      return updatedItem;
+    } else {
+      // Create new cart item
+      const [cartItem] = await db
+        .insert(cartItems)
+        .values({
+          ...insertCartItem,
+          quantity: insertCartItem.quantity || 1
+        })
+        .returning();
+      return cartItem;
+    }
+  }
+
+  async updateCartItemQuantity(id: string, quantity: number): Promise<CartItem | undefined> {
+    if (quantity <= 0) {
+      await db.delete(cartItems).where(eq(cartItems.id, id));
+      return undefined;
+    }
+    
+    const [cartItem] = await db
+      .update(cartItems)
+      .set({ quantity })
+      .where(eq(cartItems.id, id))
+      .returning();
+    return cartItem || undefined;
+  }
+
+  async removeFromCart(id: string): Promise<boolean> {
+    const result = await db.delete(cartItems).where(eq(cartItems.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async clearCart(sessionId: string): Promise<boolean> {
+    const result = await db.delete(cartItems).where(eq(cartItems.sessionId, sessionId));
+    return (result.rowCount || 0) >= 0;
+  }
+}
+
+// Initialize storage - use DatabaseStorage for production
+export const storage = new DatabaseStorage();
+
+// Keep MemStorage available for development/testing
+export const memStorage = new MemStorage();
