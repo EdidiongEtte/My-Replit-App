@@ -26,7 +26,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const sessionId = 'default-session';
 
   const { data: cartItems = [] } = useQuery<CartItemWithProduct[]>({
-    queryKey: ["/api/cart", { sessionId }],
+    queryKey: ["/api/cart", sessionId],
     refetchOnWindowFocus: true,
   });
 

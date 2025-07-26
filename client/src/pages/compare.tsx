@@ -34,10 +34,11 @@ export default function Compare() {
       const store = stores.find(s => s.id === product.storeId);
       const productWithStore = { ...product, store };
       
-      // Normalize product names for grouping (remove common variations)
+      // Normalize product names for grouping (extract main product type)
       const normalizedName = product.name
         .toLowerCase()
-        .replace(/\b(organic|fresh|farm|local)\b/g, '')
+        .replace(/\b(organic|fresh|farm|local|whole|2%|free range|large|red|gala|grade a)\b/g, '')
+        .replace(/\s+/g, ' ')
         .trim();
       
       if (!groups[normalizedName]) {
@@ -59,7 +60,7 @@ export default function Compare() {
         return hasMultipleStores && matchesSearch;
       })
       .map(([name, products]) => ({
-        name: products[0].name.replace(/\b(organic|fresh|farm|local)\b/gi, '').trim(),
+        name: name.charAt(0).toUpperCase() + name.slice(1),
         products: products.sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
       }));
   };
