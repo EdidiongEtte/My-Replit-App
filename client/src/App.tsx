@@ -12,7 +12,9 @@ import Profile from "@/pages/profile";
 import Compare from "@/pages/compare";
 import BottomNavigation from "@/components/bottom-navigation";
 import CartModal from "@/components/cart-modal";
+import NotificationPanel from "@/components/notification-panel";
 import { CartProvider } from "@/hooks/use-cart";
+import { NotificationProvider } from "@/hooks/use-notifications";
 
 function Router() {
   return (
@@ -38,8 +40,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <CartProvider>
-          <Toaster />
-          <Router />
+          <NotificationProvider>
+            <Toaster />
+            <Router />
+            <NotificationPanel />
+          </NotificationProvider>
         </CartProvider>
       </TooltipProvider>
     </QueryClientProvider>

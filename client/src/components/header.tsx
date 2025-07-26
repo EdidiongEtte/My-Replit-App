@@ -1,9 +1,11 @@
 import { MapPin, Bell, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/use-cart";
+import { useNotifications } from "@/hooks/use-notifications";
 
 export default function Header() {
   const { items, toggleCart } = useCart();
+  const { unreadCount, togglePanel } = useNotifications();
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -19,11 +21,13 @@ export default function Header() {
           </div>
           <div className="flex items-center space-x-4">
             <div className="text-primary font-bold text-lg">Paiko</div>
-            <Button variant="ghost" size="sm" className="relative">
+            <Button variant="ghost" size="sm" className="relative" onClick={togglePanel}>
               <Bell className="text-gray-600 h-5 w-5" />
-              <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                3
-              </span>
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                  {unreadCount}
+                </span>
+              )}
             </Button>
             <Button variant="ghost" size="sm" className="relative" onClick={toggleCart}>
               <ShoppingCart className="text-gray-600 h-5 w-5" />
