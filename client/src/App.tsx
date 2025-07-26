@@ -10,11 +10,14 @@ import Orders from "@/pages/orders";
 import Search from "@/pages/search";
 import Profile from "@/pages/profile";
 import Compare from "@/pages/compare";
+import Map from "@/pages/map";
 import BottomNavigation from "@/components/bottom-navigation";
 import CartModal from "@/components/cart-modal";
 import NotificationPanel from "@/components/notification-panel";
+import LocationModal from "@/components/location-modal";
 import { CartProvider } from "@/hooks/use-cart";
 import { NotificationProvider } from "@/hooks/use-notifications";
+import { LocationProvider } from "@/hooks/use-location";
 
 function Router() {
   return (
@@ -25,6 +28,7 @@ function Router() {
         <Route path="/orders" component={Orders} />
         <Route path="/search" component={Search} />
         <Route path="/compare" component={Compare} />
+        <Route path="/map" component={Map} />
         <Route path="/profile" component={Profile} />
         <Route component={NotFound} />
       </Switch>
@@ -39,13 +43,16 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <CartProvider>
-          <NotificationProvider>
-            <Toaster />
-            <Router />
-            <NotificationPanel />
-          </NotificationProvider>
-        </CartProvider>
+        <LocationProvider>
+          <CartProvider>
+            <NotificationProvider>
+              <Toaster />
+              <Router />
+              <NotificationPanel />
+              <LocationModal />
+            </NotificationProvider>
+          </CartProvider>
+        </LocationProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

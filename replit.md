@@ -52,6 +52,7 @@ Preferred communication style: Simple, everyday language.
 - **Store**: Individual store pages with product listings
 - **Search**: Universal search across stores and products
 - **Compare**: Price comparison across stores for similar products
+- **Map**: Interactive store locator with delivery zones and location management
 - **Orders**: Order history and status tracking
 - **Profile**: User account management (UI only)
 
@@ -61,7 +62,10 @@ Preferred communication style: Simple, everyday language.
 - **Cart Modal**: Sliding cart interface with quantity management and checkout
 - **Bottom Navigation**: Mobile-optimized navigation between main sections
 - **Price Comparison**: Side-by-side product comparison with best price highlighting
-- **Header**: Top navigation with Paiko branding, location, and cart access
+- **Header**: Top navigation with Paiko branding, clickable location selector, notifications, and cart access
+- **Notification System**: Bell icon with real-time notifications for orders, promos, and system updates
+- **Location System**: Interactive location picker with GPS support and delivery area mapping
+- **Map View**: Visual store locator with user location, store markers, and delivery zone indicators
 
 ## Data Flow
 
