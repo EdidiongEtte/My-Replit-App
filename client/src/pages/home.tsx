@@ -53,34 +53,45 @@ export default function Home() {
       
       {/* Search Bar */}
       <div className="px-6 py-4 bg-white">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input 
-            placeholder="Search stores and products..." 
-            className="w-full pl-10 pr-4 py-3 bg-gray-50 border-0 focus:ring-2 focus:ring-primary focus:bg-white transition-all"
-          />
-        </div>
+        <Link href="/search">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input 
+              placeholder="Search stores and products..." 
+              className="w-full pl-10 pr-4 py-3 bg-gray-50 border-0 focus:ring-2 focus:ring-primary focus:bg-white transition-all cursor-pointer"
+              readOnly
+            />
+          </div>
+        </Link>
       </div>
 
       {/* Quick Filters */}
       <div className="px-6 py-2">
         <div className="flex space-x-3 overflow-x-auto">
-          <Button className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">
-            <Clock className="w-3 h-3 mr-1" />
-            Fast Delivery
-          </Button>
-          <Button variant="outline" className="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">
-            <Leaf className="w-3 h-3 mr-1" />
-            Organic
-          </Button>
-          <Button variant="outline" className="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">
-            <DollarSign className="w-3 h-3 mr-1" />
-            Best Price
-          </Button>
-          <Button variant="outline" className="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">
-            <Star className="w-3 h-3 mr-1" />
-            Top Rated
-          </Button>
+          <Link href="/search?filter=fast">
+            <Button className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">
+              <Clock className="w-3 h-3 mr-1" />
+              Fast Delivery
+            </Button>
+          </Link>
+          <Link href="/search?filter=organic">
+            <Button variant="outline" className="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">
+              <Leaf className="w-3 h-3 mr-1" />
+              Organic
+            </Button>
+          </Link>
+          <Link href="/search?filter=budget">
+            <Button variant="outline" className="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">
+              <DollarSign className="w-3 h-3 mr-1" />
+              Best Price
+            </Button>
+          </Link>
+          <Link href="/search?filter=rated">
+            <Button variant="outline" className="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">
+              <Star className="w-3 h-3 mr-1" />
+              Top Rated
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -233,9 +244,11 @@ export default function Home() {
             <div className="relative z-10">
               <h3 className="text-lg font-bold mb-2">Free Delivery Weekend!</h3>
               <p className="text-sm mb-4 opacity-90">Get free delivery on orders over $25. Valid until Sunday.</p>
-              <Button className="bg-white text-primary font-medium px-4 py-2 rounded-lg text-sm hover:bg-gray-100">
-                Shop Now
-              </Button>
+              <Link href="/search">
+                <Button className="bg-white text-primary font-medium px-4 py-2 rounded-lg text-sm hover:bg-gray-100">
+                  Shop Now
+                </Button>
+              </Link>
             </div>
             <img 
               src="https://images.unsplash.com/photo-1565793298595-6a879b1d9492?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=120"

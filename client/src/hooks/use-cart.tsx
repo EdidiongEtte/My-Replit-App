@@ -27,7 +27,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const { data: cartItems = [] } = useQuery<CartItemWithProduct[]>({
     queryKey: ["/api/cart", sessionId],
-    queryFn: () => fetch(`/api/cart?sessionId=${sessionId}`).then(res => res.json()),
+    queryFn: async () => {
+      const response = await fetch(`/api/cart?sessionId=${sessionId}`);
+      if (!response.ok) {
+        console.warn('Cart API failed, returning empty cart');
+        return [];
+      }
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    },
     refetchOnWindowFocus: true,
   });
 

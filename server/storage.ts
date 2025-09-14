@@ -533,8 +533,8 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-// Initialize storage - use DatabaseStorage for production
-export const storage = new DatabaseStorage();
+// Initialize storage - temporarily use MemStorage due to database connection issues
+export const storage = new MemStorage();
 
-// Keep MemStorage available for development/testing
-export const memStorage = new MemStorage();
+// Keep DatabaseStorage available when database is fixed
+export const dbStorage = new DatabaseStorage();

@@ -8,7 +8,7 @@ export default function Header() {
   const { items, toggleCart } = useCart();
   const { unreadCount, togglePanel } = useNotifications();
   const { currentLocation, openLocationModal } = useLocation();
-  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const itemCount = items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
