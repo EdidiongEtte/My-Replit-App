@@ -245,7 +245,7 @@ export class MemStorage implements IStorage {
         storeId: "store-3",
         name: "Maggi Seasoning Cubes",
         description: "50 cubes pack",
-        image: "https://images.unsplash.com/photo-1596040033229-a0b3b9333a3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        image: "/attached_assets/image_1763043023341.png",
         price: "5.49",
         category: "pantry",
         inStock: true
@@ -265,7 +265,7 @@ export class MemStorage implements IStorage {
         storeId: "store-3",
         name: "Plantain Chips",
         description: "250g bag - Spicy",
-        image: "https://images.unsplash.com/photo-1628773822990-202e9de55607?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        image: "/attached_assets/image_1763042967983.png",
         price: "3.99",
         category: "snacks",
         inStock: true
