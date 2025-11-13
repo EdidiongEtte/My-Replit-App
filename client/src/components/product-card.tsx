@@ -41,7 +41,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <img
         src={product.image}
         alt={product.name}
-        className="w-full h-32 object-cover"
+        className="w-full h-32 md:h-40 lg:h-48 object-cover"
       />
       <div className="p-3">
         <h3 className="font-medium text-gray-800 text-sm">{product.name}</h3>

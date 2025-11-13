@@ -63,7 +63,7 @@ export default function Store() {
         <img 
           src={store.image}
           alt={store.name}
-          className="w-full h-48 object-cover"
+          className="w-full h-48 md:h-64 lg:h-80 object-cover"
         />
         <div className="absolute top-4 left-4">
           <Link href="/">
@@ -101,13 +101,13 @@ export default function Store() {
       </div>
 
       {/* Products */}
-      <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Products</h2>
+      <div className="p-6 max-w-7xl mx-auto">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Products</h2>
         {productsLoading ? (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden animate-pulse">
-                <div className="h-32 bg-gray-200"></div>
+                <div className="h-32 md:h-40 lg:h-48 bg-gray-200"></div>
                 <div className="p-3">
                   <div className="h-4 bg-gray-200 rounded mb-2"></div>
                   <div className="h-3 bg-gray-200 rounded mb-2"></div>
@@ -117,7 +117,7 @@ export default function Store() {
             ))}
           </div>
         ) : products && products.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

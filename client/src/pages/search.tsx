@@ -84,14 +84,14 @@ export default function Search() {
         </div>
       </div>
 
-      <div className="p-6">
+      <div className="p-6 max-w-7xl mx-auto">
         {activeTab === "products" ? (
           <div>
             {productsLoading ? (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden animate-pulse">
-                    <div className="h-32 bg-gray-200"></div>
+                    <div className="h-32 md:h-40 lg:h-48 bg-gray-200"></div>
                     <div className="p-3">
                       <div className="h-4 bg-gray-200 rounded mb-2"></div>
                       <div className="h-3 bg-gray-200 rounded mb-2"></div>
@@ -102,10 +102,10 @@ export default function Search() {
               </div>
             ) : products && products.length > 0 ? (
               <div>
-                <h2 className="text-lg font-bold text-gray-800 mb-4">
+                <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4">
                   {searchQuery ? `Results for "${searchQuery}"` : "All Products"} ({products.length})
                 </h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
@@ -123,10 +123,10 @@ export default function Search() {
         ) : (
           <div>
             {storesLoading ? (
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-100 animate-pulse">
-                    <div className="h-40 bg-gray-200 rounded-t-lg"></div>
+                    <div className="h-40 md:h-48 lg:h-56 bg-gray-200 rounded-t-lg"></div>
                     <div className="p-4">
                       <div className="h-4 bg-gray-200 rounded mb-2"></div>
                       <div className="h-3 bg-gray-200 rounded mb-2"></div>
@@ -137,10 +137,10 @@ export default function Search() {
               </div>
             ) : filteredStores.length > 0 ? (
               <div>
-                <h2 className="text-lg font-bold text-gray-800 mb-4">
+                <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4">
                   {searchQuery ? `Stores for "${searchQuery}"` : "All Stores"} ({filteredStores.length})
                 </h2>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {filteredStores.map((store) => (
                     <Link key={store.id} href={`/store/${store.id}`}>
                       <StoreCard store={store} />

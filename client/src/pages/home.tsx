@@ -95,16 +95,16 @@ export default function Home() {
         </div>
       </div>
 
-      <main>
+      <main className="max-w-7xl mx-auto">
         {/* Featured Stores */}
         <section className="px-6 py-4">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Featured Stores Near You</h2>
-          <div className="space-y-4">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Featured Stores Near You</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
             {storesLoading ? (
-              <div className="space-y-4">
+              <>
                 {[1, 2].map((i) => (
                   <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-100 animate-pulse">
-                    <div className="h-40 bg-gray-200 rounded-t-lg"></div>
+                    <div className="h-40 md:h-48 lg:h-56 bg-gray-200 rounded-t-lg"></div>
                     <div className="p-4">
                       <div className="h-4 bg-gray-200 rounded mb-2"></div>
                       <div className="h-3 bg-gray-200 rounded mb-2"></div>
@@ -112,7 +112,7 @@ export default function Home() {
                     </div>
                   </div>
                 ))}
-              </div>
+              </>
             ) : (
               stores?.map((store) => (
                 <Link key={store.id} href={`/store/${store.id}`}>
@@ -125,14 +125,14 @@ export default function Home() {
 
         {/* Category Grid */}
         <section className="px-6 py-4">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Shop by Category</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Shop by Category</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {categories.map((category) => (
-              <div key={category.name} className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 text-center">
+              <div key={category.name} className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 text-center hover:shadow-md transition-shadow cursor-pointer">
                 <img 
                   src={category.image}
                   alt={category.name}
-                  className="w-full h-20 object-cover rounded-lg mb-3"
+                  className="w-full h-20 md:h-24 lg:h-28 object-cover rounded-lg mb-3"
                 />
                 <h3 className="font-medium text-gray-800">{category.name}</h3>
                 <p className="text-xs text-gray-500">{category.description}</p>
@@ -144,7 +144,7 @@ export default function Home() {
         {/* Recent Orders */}
         <section className="px-6 py-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800">Recent Orders</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800">Recent Orders</h2>
             <Link href="/orders">
               <Button variant="ghost" className="text-primary font-medium text-sm">
                 View All
@@ -202,12 +202,12 @@ export default function Home() {
 
         {/* Popular Products */}
         <section className="px-6 py-4">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Popular Right Now</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Popular Right Now</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {productsLoading ? (
               Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden animate-pulse">
-                  <div className="h-32 bg-gray-200"></div>
+                  <div className="h-32 md:h-40 lg:h-48 bg-gray-200"></div>
                   <div className="p-3">
                     <div className="h-4 bg-gray-200 rounded mb-2"></div>
                     <div className="h-3 bg-gray-200 rounded mb-2"></div>

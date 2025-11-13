@@ -15,7 +15,7 @@ export default function StoreCard({ store }: StoreCardProps) {
         <img
           src={store.image}
           alt={store.name}
-          className="w-full h-40 object-cover"
+          className="w-full h-40 md:h-48 lg:h-56 object-cover"
         />
         <div className="absolute top-3 left-3">
           <span className="bg-success text-white px-2 py-1 rounded text-xs font-medium flex items-center">
