@@ -71,6 +71,18 @@ export class MemStorage implements IStorage {
         freeDeliveryMinimum: null,
         isOpen: true,
         category: "convenience"
+      },
+      {
+        id: "store-3",
+        name: "Naija Foods Market",
+        description: "Authentic Nigerian groceries & snacks",
+        image: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=200",
+        rating: "4.9",
+        deliveryTime: "20-30 min",
+        deliveryFee: "3.49",
+        freeDeliveryMinimum: "40.00",
+        isOpen: true,
+        category: "african"
       }
     ];
 
@@ -205,6 +217,107 @@ export class MemStorage implements IStorage {
         image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
         price: "4.29",
         category: "snacks",
+        inStock: true
+      },
+      // Naija Foods Market products
+      {
+        id: "product-13",
+        storeId: "store-3",
+        name: "Indomie Noodles",
+        description: "Pack of 5 - Chicken flavor",
+        image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "4.99",
+        category: "pantry",
+        inStock: true
+      },
+      {
+        id: "product-14",
+        storeId: "store-3",
+        name: "Nigerian Meat Pies",
+        description: "4 pieces - Freshly baked",
+        image: "https://images.unsplash.com/photo-1509358271058-acd22cc93898?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "7.99",
+        category: "snacks",
+        inStock: true
+      },
+      {
+        id: "product-15",
+        storeId: "store-3",
+        name: "Maggi Seasoning Cubes",
+        description: "50 cubes pack",
+        image: "https://images.unsplash.com/photo-1596040033229-a0b3b9333a3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "5.49",
+        category: "pantry",
+        inStock: true
+      },
+      {
+        id: "product-16",
+        storeId: "store-3",
+        name: "Jollof Rice Mix",
+        description: "500g - Authentic blend",
+        image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "6.99",
+        category: "pantry",
+        inStock: true
+      },
+      {
+        id: "product-17",
+        storeId: "store-3",
+        name: "Plantain Chips",
+        description: "250g bag - Spicy",
+        image: "https://images.unsplash.com/photo-1628773822990-202e9de55607?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "3.99",
+        category: "snacks",
+        inStock: true
+      },
+      {
+        id: "product-18",
+        storeId: "store-3",
+        name: "Suya Spice Mix",
+        description: "100g - Premium blend",
+        image: "https://images.unsplash.com/photo-1596040033229-a0b3b9333a3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "4.49",
+        category: "pantry",
+        inStock: true
+      },
+      {
+        id: "product-19",
+        storeId: "store-3",
+        name: "Chin Chin Snacks",
+        description: "300g - Crunchy & sweet",
+        image: "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "5.99",
+        category: "snacks",
+        inStock: true
+      },
+      {
+        id: "product-20",
+        storeId: "store-3",
+        name: "Palm Oil",
+        description: "1 liter - Authentic red palm oil",
+        image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "8.99",
+        category: "pantry",
+        inStock: true
+      },
+      {
+        id: "product-21",
+        storeId: "store-3",
+        name: "Garri (White)",
+        description: "2kg - Premium quality",
+        image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "9.99",
+        category: "pantry",
+        inStock: true
+      },
+      {
+        id: "product-22",
+        storeId: "store-3",
+        name: "Zobo Drink (Hibiscus)",
+        description: "1 liter - Refreshing",
+        image: "https://images.unsplash.com/photo-1546173159-315724a31696?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=160",
+        price: "4.99",
+        category: "beverages",
         inStock: true
       }
     ];
