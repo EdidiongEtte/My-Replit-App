@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, MapPin, Navigation, Search } from "lucide-react";
+import { X, MapPin, Navigation, Search, Loader2, Crosshair, Wifi } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLocation, type Location } from "@/hooks/use-location";
@@ -10,6 +10,7 @@ export default function LocationModal() {
     currentLocation, 
     isLocationModalOpen, 
     availableLocations, 
+    isDetecting,
     setLocation, 
     closeLocationModal, 
     getCurrentPosition 
@@ -34,20 +35,23 @@ export default function LocationModal() {
         setLocation(position);
         
         // Different messages based on location type
-        if (position.address.includes("GPS")) {
+        if (position.locationType === 'gps') {
+          const accuracyText = position.accuracy 
+            ? ` (accuracy: ${Math.round(position.accuracy)}m)` 
+            : '';
           toast({
-            title: "Location Updated",
-            description: "Using your precise GPS location for delivery",
+            title: "GPS Location Detected",
+            description: `Using your precise location: ${position.address}, ${position.city}${accuracyText}`,
           });
-        } else if (position.address.includes("Approximate") || position.address.includes("Default")) {
+        } else if (position.locationType === 'ip') {
           toast({
-            title: "Location Updated",
-            description: "Using approximate location. You can refine this by selecting a specific address below.",
+            title: "Approximate Location Detected",
+            description: `Detected via network: ${position.city}, ${position.state}. For better accuracy, enable GPS permissions.`,
           });
         } else {
           toast({
             title: "Location Updated", 
-            description: "Location detected successfully",
+            description: `Delivering to ${position.address}, ${position.city}`,
           });
         }
       } else {
@@ -101,16 +105,27 @@ export default function LocationModal() {
               variant="outline" 
               className="w-full"
               onClick={handleUseCurrentLocation}
-              disabled={isLoadingPosition}
+              disabled={isLoadingPosition || isDetecting}
             >
-              <Navigation className="h-4 w-4 mr-2" />
-              {isLoadingPosition ? "Detecting location..." : "Detect My Location"}
+              {isLoadingPosition || isDetecting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Detecting your location...
+                </>
+              ) : (
+                <>
+                  <Crosshair className="h-4 w-4 mr-2" />
+                  Use GPS Location
+                </>
+              )}
             </Button>
             
             <div className="text-xs text-gray-500 text-center space-y-1">
-              <p>Click to automatically detect your location or manually select an address below</p>
-              <p className="text-orange-600">
-                Note: GPS detection may not work in all environments. We'll provide an approximate location if needed.
+              <p className="flex items-center justify-center gap-1">
+                <Crosshair className="h-3 w-3" /> High accuracy GPS detection with address lookup
+              </p>
+              <p className="text-blue-600 flex items-center justify-center gap-1">
+                <Wifi className="h-3 w-3" /> Falls back to network-based location if GPS unavailable
               </p>
             </div>
           </div>

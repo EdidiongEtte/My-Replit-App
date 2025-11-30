@@ -7,12 +7,15 @@ export interface Location {
   city: string;
   state: string;
   zipCode: string;
+  accuracy?: number;
+  locationType?: 'gps' | 'ip' | 'manual' | 'default';
 }
 
 interface LocationContextType {
   currentLocation: Location;
   isLocationModalOpen: boolean;
   availableLocations: Location[];
+  isDetecting: boolean;
   setLocation: (location: Location) => void;
   openLocationModal: () => void;
   closeLocationModal: () => void;
@@ -84,6 +87,7 @@ const LocationContext = createContext<LocationContextType | undefined>(undefined
 export function LocationProvider({ children }: { children: ReactNode }) {
   const [currentLocation, setCurrentLocation] = useState<Location>(defaultLocation);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [isDetecting, setIsDetecting] = useState(false);
 
   // Load saved location from localStorage on mount
   useEffect(() => {
@@ -108,9 +112,12 @@ export function LocationProvider({ children }: { children: ReactNode }) {
   const closeLocationModal = () => setIsLocationModalOpen(false);
 
   const getCurrentPosition = async (): Promise<Location | null> => {
+    setIsDetecting(true);
+    
     return new Promise((resolve) => {
       if (!navigator.geolocation) {
         console.warn('Geolocation is not supported by this browser');
+        setIsDetecting(false);
         resolve(null);
         return;
       }
@@ -120,6 +127,7 @@ export function LocationProvider({ children }: { children: ReactNode }) {
         navigator.permissions.query({ name: 'geolocation' }).then((permission) => {
           if (permission.state === 'denied') {
             console.warn('Geolocation permission denied');
+            setIsDetecting(false);
             resolve(null);
             return;
           }
@@ -133,6 +141,7 @@ export function LocationProvider({ children }: { children: ReactNode }) {
         // Try to get location via IP geolocation
         try {
           const ipLocation = await getLocationFromIP();
+          setIsDetecting(false);
           resolve(ipLocation);
         } catch (error) {
           // Final fallback to UK location
@@ -142,29 +151,39 @@ export function LocationProvider({ children }: { children: ReactNode }) {
             longitude: -0.1278 + (Math.random() - 0.5) * 0.01,
             city: "London",
             state: "England",
-            zipCode: "SW1A 1AA"
+            zipCode: "SW1A 1AA",
+            locationType: 'default'
           };
+          setIsDetecting(false);
           resolve(fallbackLocation);
         }
-      }, 5000);
+      }, 10000); // Give more time for high accuracy GPS
 
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           clearTimeout(timeoutId);
-          const { latitude, longitude } = position.coords;
+          const { latitude, longitude, accuracy } = position.coords;
           
-          // For demo purposes, we'll simulate reverse geocoding
-          // In a real app, you'd use a geocoding service like Google Maps API
-          const simulatedLocation: Location = {
-            address: "Current GPS Location",
-            latitude,
-            longitude,
-            city: "Detected City",
-            state: "Detected State",
-            zipCode: "00000"
-          };
-          
-          resolve(simulatedLocation);
+          // Use reverse geocoding to get actual address from coordinates
+          try {
+            const geocodedLocation = await reverseGeocode(latitude, longitude, accuracy);
+            setIsDetecting(false);
+            resolve(geocodedLocation);
+          } catch (error) {
+            console.warn('Reverse geocoding failed, using coordinates only');
+            const gpsLocation: Location = {
+              address: `GPS Location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
+              latitude,
+              longitude,
+              city: "Unknown",
+              state: "Unknown",
+              zipCode: "Unknown",
+              accuracy: accuracy,
+              locationType: 'gps'
+            };
+            setIsDetecting(false);
+            resolve(gpsLocation);
+          }
         },
         async (error) => {
           clearTimeout(timeoutId);
@@ -173,6 +192,7 @@ export function LocationProvider({ children }: { children: ReactNode }) {
           // Try IP-based geolocation as fallback
           try {
             const ipLocation = await getLocationFromIP();
+            setIsDetecting(false);
             resolve(ipLocation);
           } catch (ipError) {
             // Final fallback location
@@ -182,15 +202,17 @@ export function LocationProvider({ children }: { children: ReactNode }) {
               longitude: -0.1278 + (Math.random() - 0.5) * 0.01,
               city: "London",
               state: "England",
-              zipCode: "SW1A 1AA"
+              zipCode: "SW1A 1AA",
+              locationType: 'default'
             };
+            setIsDetecting(false);
             resolve(fallbackLocation);
           }
         },
         {
-          enableHighAccuracy: false, // Use less accuracy for better compatibility
-          timeout: 5000, // Shorter timeout
-          maximumAge: 600000 // 10 minutes cache
+          enableHighAccuracy: true, // Use high accuracy GPS for best results
+          timeout: 10000, // Allow more time for accurate GPS fix
+          maximumAge: 60000 // 1 minute cache for fresh location
         }
       );
     });
@@ -201,6 +223,7 @@ export function LocationProvider({ children }: { children: ReactNode }) {
       currentLocation,
       isLocationModalOpen,
       availableLocations,
+      isDetecting,
       setLocation,
       openLocationModal,
       closeLocationModal,
@@ -219,6 +242,60 @@ export function useLocation() {
   return context;
 }
 
+// Reverse geocoding using OpenStreetMap Nominatim (free service)
+async function reverseGeocode(latitude: number, longitude: number, accuracy?: number): Promise<Location> {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+      {
+        headers: {
+          'User-Agent': 'Paiko-Grocery-App/1.0'
+        }
+      }
+    );
+    
+    if (!response.ok) throw new Error('Reverse geocoding failed');
+    
+    const data = await response.json();
+    const address = data.address || {};
+    
+    // Build a readable address from components
+    const streetNumber = address.house_number || '';
+    const street = address.road || address.street || address.pedestrian || '';
+    const neighbourhood = address.neighbourhood || address.suburb || '';
+    const city = address.city || address.town || address.village || address.municipality || 'Unknown';
+    const state = address.state || address.county || address.region || 'Unknown';
+    const postcode = address.postcode || 'Unknown';
+    const country = address.country || '';
+    
+    // Create a friendly address string
+    let addressString = '';
+    if (streetNumber && street) {
+      addressString = `${streetNumber} ${street}`;
+    } else if (street) {
+      addressString = street;
+    } else if (neighbourhood) {
+      addressString = neighbourhood;
+    } else {
+      addressString = `${city} Area`;
+    }
+    
+    return {
+      address: addressString,
+      latitude,
+      longitude,
+      city,
+      state,
+      zipCode: postcode,
+      accuracy: accuracy,
+      locationType: 'gps'
+    };
+  } catch (error) {
+    console.warn('Reverse geocoding failed:', error);
+    throw error;
+  }
+}
+
 // IP-based geolocation fallback
 async function getLocationFromIP(): Promise<Location> {
   try {
@@ -234,7 +311,8 @@ async function getLocationFromIP(): Promise<Location> {
       longitude: data.longitude || -0.1278,
       city: data.city || 'London',
       state: data.region || 'England', 
-      zipCode: data.postal || 'Unknown'
+      zipCode: data.postal || 'Unknown',
+      locationType: 'ip'
     };
   } catch (error) {
     console.warn('IP geolocation failed:', error);
