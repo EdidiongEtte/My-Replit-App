@@ -1,5 +1,5 @@
-import { type Store, type Product, type Order, type CartItem, type InsertStore, type InsertProduct, type InsertOrder, type InsertCartItem } from "@shared/schema";
-import { stores, products, orders, cartItems } from "@shared/schema";
+import { type Store, type Product, type Order, type CartItem, type PaymentMethod, type InsertStore, type InsertProduct, type InsertOrder, type InsertCartItem, type InsertPaymentMethod } from "@shared/schema";
+import { stores, products, orders, cartItems, paymentMethods } from "@shared/schema";
 import { db } from "./db";
 import { eq, and } from "drizzle-orm";
 import { randomUUID } from "crypto";
@@ -29,6 +29,11 @@ export interface IStorage {
   updateCartItemQuantity(id: string, quantity: number): Promise<CartItem | undefined>;
   removeFromCart(id: string): Promise<boolean>;
   clearCart(sessionId: string): Promise<boolean>;
+
+  // Payment Methods
+  getPaymentMethods(sessionId: string): Promise<PaymentMethod[]>;
+  addPaymentMethod(method: InsertPaymentMethod): Promise<PaymentMethod>;
+  deletePaymentMethod(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -36,12 +41,14 @@ export class MemStorage implements IStorage {
   private products: Map<string, Product>;
   private orders: Map<string, Order>;
   private cartItems: Map<string, CartItem>;
+  private paymentMethods: Map<string, PaymentMethod>;
 
   constructor() {
     this.stores = new Map();
     this.products = new Map();
     this.orders = new Map();
     this.cartItems = new Map();
+    this.paymentMethods = new Map();
     this.seedData();
   }
 
@@ -504,6 +511,22 @@ export class MemStorage implements IStorage {
     cartItems.forEach(item => this.cartItems.delete(item.id));
     return true;
   }
+
+  // Payment Method methods
+  async getPaymentMethods(sessionId: string): Promise<PaymentMethod[]> {
+    return Array.from(this.paymentMethods.values()).filter(m => m.sessionId === sessionId);
+  }
+
+  async addPaymentMethod(insertMethod: InsertPaymentMethod): Promise<PaymentMethod> {
+    const id = randomUUID();
+    const method: PaymentMethod = { ...insertMethod, id };
+    this.paymentMethods.set(id, method);
+    return method;
+  }
+
+  async deletePaymentMethod(id: string): Promise<boolean> {
+    return this.paymentMethods.delete(id);
+  }
 }
 
 // Database Storage Implementation
@@ -643,6 +666,24 @@ export class DatabaseStorage implements IStorage {
   async clearCart(sessionId: string): Promise<boolean> {
     const result = await db.delete(cartItems).where(eq(cartItems.sessionId, sessionId));
     return (result.rowCount || 0) >= 0;
+  }
+
+  // Payment Method methods
+  async getPaymentMethods(sessionId: string): Promise<PaymentMethod[]> {
+    return await db.select().from(paymentMethods).where(eq(paymentMethods.sessionId, sessionId));
+  }
+
+  async addPaymentMethod(insertMethod: InsertPaymentMethod): Promise<PaymentMethod> {
+    const [method] = await db
+      .insert(paymentMethods)
+      .values(insertMethod)
+      .returning();
+    return method;
+  }
+
+  async deletePaymentMethod(id: string): Promise<boolean> {
+    const result = await db.delete(paymentMethods).where(eq(paymentMethods.id, id));
+    return (result.rowCount || 0) > 0;
   }
 }
 

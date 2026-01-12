@@ -45,6 +45,16 @@ export const cartItems = pgTable("cart_items", {
   sessionId: text("session_id").notNull(), // For session-based cart
 });
 
+export const paymentMethods = pgTable("payment_methods", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  sessionId: text("session_id").notNull(),
+  cardNumber: text("card_number").notNull(),
+  cardHolder: text("card_holder").notNull(),
+  expiryDate: text("expiry_date").notNull(),
+  cardType: text("card_type").notNull(), // 'visa', 'mastercard', etc.
+  isDefault: boolean("is_default").notNull().default(false),
+});
+
 export const insertStoreSchema = createInsertSchema(stores).omit({
   id: true,
 });
@@ -62,15 +72,21 @@ export const insertCartItemSchema = createInsertSchema(cartItems).omit({
   id: true,
 });
 
+export const insertPaymentMethodSchema = createInsertSchema(paymentMethods).omit({
+  id: true,
+});
+
 export type Store = typeof stores.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type Order = typeof orders.$inferSelect;
 export type CartItem = typeof cartItems.$inferSelect;
+export type PaymentMethod = typeof paymentMethods.$inferSelect;
 
 export type InsertStore = z.infer<typeof insertStoreSchema>;
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type InsertCartItem = z.infer<typeof insertCartItemSchema>;
+export type InsertPaymentMethod = z.infer<typeof insertPaymentMethodSchema>;
 
 // Relations
 export const storesRelations = relations(stores, ({ many }) => ({

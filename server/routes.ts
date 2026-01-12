@@ -1,10 +1,50 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertOrderSchema, insertCartItemSchema } from "@shared/schema";
+import { insertOrderSchema, insertCartItemSchema, insertPaymentMethodSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Payment Methods
+  app.get("/api/payment-methods", async (req, res) => {
+    try {
+      const sessionId = req.query.sessionId as string || 'default-session';
+      const methods = await storage.getPaymentMethods(sessionId);
+      res.json(methods);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch payment methods" });
+    }
+  });
+
+  app.post("/api/payment-methods", async (req, res) => {
+    try {
+      const sessionId = req.query.sessionId as string || 'default-session';
+      const validatedData = insertPaymentMethodSchema.parse({
+        ...req.body,
+        sessionId
+      });
+      const method = await storage.addPaymentMethod(validatedData);
+      res.status(201).json(method);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid payment method data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to add payment method" });
+    }
+  });
+
+  app.delete("/api/payment-methods/:id", async (req, res) => {
+    try {
+      const success = await storage.deletePaymentMethod(req.params.id);
+      if (!success) {
+        return res.status(404).json({ message: "Payment method not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete payment method" });
+    }
+  });
+
   // Stores
   app.get("/api/stores", async (req, res) => {
     try {
